@@ -1,18 +1,16 @@
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from fastapi import FastAPI, Depends, HTTPException
-from fastapi.middleware.cors import CORSMiddleware # <--- ADD THIS LINE
-from fastapi.responses import Response
 from typing import List
-import models
-import schemas
 import io
 import csv
 from fastapi.responses import Response
+
+import models
+import schemas
 from database import engine, get_db
 
 models.Base.metadata.create_all(bind=engine)
-app = FastAPI(title="ProcuraLite OS", version="1.0")
 
 app = FastAPI(title="ProcuraLite OS", version="1.0")
 
@@ -21,7 +19,7 @@ app = FastAPI(title="ProcuraLite OS", version="1.0")
 # ==========================================
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"], # Tells Python to trust your Next.js dashboard
+    allow_origins=["*"], # <--- CHANGED TO ALLOW ALL INTERNET TRAFFIC
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -29,6 +27,14 @@ app.add_middleware(
 
 @app.get("/")
 def health_check(): return {"status": "System Online"}
+
+# ... (Keep all your other APIs exactly as they are below this line)
+models.Base.metadata.create_all(bind=engine)
+app = FastAPI(title="ProcuraLite OS", version="1.0")
+
+app = FastAPI(title="ProcuraLite OS", version="1.0")
+
+
 
 # VENDOR APIs
 @app.post("/api/v1/vendors", response_model=schemas.VendorResponse)
