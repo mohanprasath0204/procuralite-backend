@@ -46,6 +46,9 @@ def create_vendor(vendor: schemas.VendorCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_vendor)
     return new_vendor
+    @app.get("/api/v1/vendors", response_model=List[schemas.VendorResponse])
+def get_vendors(db: Session = Depends(get_db)):
+    return db.query(models.Vendor).all()
 
 # MATERIAL APIs
 @app.post("/api/v1/materials", response_model=schemas.MaterialResponse)
