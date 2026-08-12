@@ -46,12 +46,13 @@ def create_vendor(vendor: schemas.VendorCreate, db: Session = Depends(get_db)):
     if existing_vendor:
         raise HTTPException(status_code=400, detail="Vendor ID already exists in the system")
     
-    # Save new vendor to the database
+    # Save new vendor to the database (Now securely mapped with payment_terms)
     new_vendor = models.Vendor(
         vendor_id=vendor.vendor_id,
         vendor_name=vendor.vendor_name,
         email=vendor.email,
-        gstin=vendor.gstin
+        gstin=vendor.gstin,
+        payment_terms=vendor.payment_terms
     )
     db.add(new_vendor)
     db.commit()
