@@ -24,6 +24,17 @@ class Vendor(Base):
     payment_terms = Column(String(50), nullable=False)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    from sqlalchemy import Float # Add this at the top of the file if it is missing
+
+class Material(Base):
+    __tablename__ = "materials"
+
+    material_id = Column(String, primary key=True, index=True)
+    description = Column(String, index=True)
+    category = Column(String)
+    unit_of_measure = Column(String)
+    standard_price = Column(Float)
+    storage_bin = Column(String)
 
 class PurchaseRequisition(Base):
     __tablename__ = "purchase_requisitions"
