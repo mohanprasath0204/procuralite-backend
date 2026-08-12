@@ -63,6 +63,34 @@ def create_vendor(vendor: schemas.VendorCreate, db: Session = Depends(get_db)):
 def get_vendors(db: Session = Depends(get_db)):
     # Fetch all vendors for the frontend dashboard table
     return db.query(models.Vendor).all()
+    # ==========================================
+# MATERIALS APIs (MASTER DATA)
+# ==========================================
+@app.post("/api/v1/materials", response_model=schemas.MaterialResponse)
+def create_material(material: schemas.MaterialCreate, db: Session = Depends(get_db)):
+    # Prevent duplicate materials
+    existing_material = db.query(models.Material).filter(models.Material.material_id == material.material_id).first()
+    if existing_material:
+        raise HTTPException(status_code=400, detail="Material ID already exists")
+    
+    # Save new material
+    new_material = models.Material(
+        material_id=material.material_id,
+        description=material.description,
+        category=material.category,
+        unit_of_measure=material.unit_of_measure,
+        standard_price=material.standard_price,
+        storage_bin=material.storage_bin
+    )
+    db.add(new_material)
+    db.commit()
+    db.refresh(new_material)
+    return new_material
+
+@app.get("/api/v1/materials", response_model=List[schemas.MaterialResponse])
+def get_materials(db: Session = Depends(get_db)):
+    # Fetch all materials for the frontend table
+    return db.query(models.Material).all()
 
 # ==========================================
 # ANALYTICS & DASHBOARD APIs
