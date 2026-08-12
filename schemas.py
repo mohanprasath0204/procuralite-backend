@@ -119,3 +119,19 @@ class SupplierScorecard(BaseModel):
     total_orders: int
     items_rejected: int
     invoices_flagged: int
+
+
+# ==========================================
+# MATERIAL SCHEMAS
+# ==========================================
+class MaterialCreate(BaseModel):
+    material_id: str
+    description: str
+    category: str
+    unit_of_measure: str
+    standard_price: float
+    storage_bin: str
+
+class MaterialResponse(MaterialCreate):
+    class Config:
+        from_attributes = True
